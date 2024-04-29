@@ -3855,7 +3855,7 @@ module.exports = require("a569817e6ea559f6");
 (function() {
     "use strict";
     /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */ if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
-    var ReactVersion = "18.3.0";
+    var ReactVersion = "18.3.1";
     // ATTENTION
     // When adding new symbols to this file,
     // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
@@ -5678,6 +5678,7 @@ module.exports = require("a569817e6ea559f6");
     exports.StrictMode = REACT_STRICT_MODE_TYPE;
     exports.Suspense = REACT_SUSPENSE_TYPE;
     exports.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactSharedInternals;
+    exports.act = act;
     exports.cloneElement = cloneElement$1;
     exports.createContext = createContext;
     exports.createElement = createElement$1;
@@ -26063,7 +26064,7 @@ module.exports = require("b0f0e6b9e8349dac");
         initializeUpdateQueue(uninitializedFiber);
         return root;
     }
-    var ReactVersion = "18.3.0";
+    var ReactVersion = "18.3.1";
     function createPortal(children, containerInfo, implementation) {
         var key = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
         checkKeyStringCoercion(key);
