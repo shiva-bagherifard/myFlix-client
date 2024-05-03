@@ -1,14 +1,15 @@
 import React from "react";
+import Button from "react-bootstrap/Button";
 
 export const MovieView = ({ movie, onBackClick }) => {
   return (
     <div>
-      <div> 
-        <img height={300} src={movie.imageUrl} alt={movie.title} />
+      <div>
+        <img src={movie.image} style={{ height: 'auto' }} className="w-100" alt="Movie Poster" />
       </div>
       <div>
-        <span>Title: </span>
-        <span>{movie.title}</span>
+        <span style={{fontWeight: 'bold' }}>Title: </span>
+        <span style={{fontWeight: 'bold' }}>{movie.title}</span>
       </div>
       <div>
         <span>Description: </span>
@@ -20,13 +21,15 @@ export const MovieView = ({ movie, onBackClick }) => {
       </div>
       <div>
         <span>Director: </span>
-        <span>{movie.director.name}</span>
+        <span>{movie.director}</span>
       </div>
       <div>
         <span>Featured: </span>
-        <span>{movie.featured ? 'Yes' : 'No'}</span>
+        <span>{movie.featured ? "True" : "False"}</span>
       </div>
-      <button onClick={onBackClick}> Back </button>
+      <Button variant="primary" onClick={onBackClick}>
+        Back
+      </Button>
     </div>
   );
 };
