@@ -7,11 +7,15 @@ export const MovieView = ({ movies }) => {
 
   const movie = movies.find((m) => m.id === movieId);
 
+  // Handle case when movie is not found
+  if (!movie) {
+    return <div>Movie not found</div>;
+  }
 
   return (
     <div>
       <div>
-      <img src={movie.image} className="img-fluid  justify-content-md-center" alt="Movie Poster" />
+        <img src={movie.imageUrl} className="img-fluid  justify-content-md-center" alt="Movie Poster" />
       </div>
       <div>
         <span style={{fontWeight: 'bold' }}>Title: </span>
@@ -26,8 +30,9 @@ export const MovieView = ({ movies }) => {
         <span>{movie.genre}</span>
       </div>
       <div>
+        {/* Access director's name properly */}
         <span>Director: </span>
-        <span>{movie.director}</span>
+        <span>{movie.director.name}</span>
       </div>
       <div>
         <span>Featured: </span>
