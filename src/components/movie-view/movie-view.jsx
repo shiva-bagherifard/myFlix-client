@@ -11,7 +11,7 @@ export const MovieView = ({ movies }) => {
   return (
     <div>
       <div>
-        <img src={movie.image} style={{ height: 'auto' }} className="w-100" alt="Movie Poster" />
+      <img src={movie.image} className="img-fluid" alt="Movie Poster" />
       </div>
       <div>
         <span style={{fontWeight: 'bold' }}>Title: </span>
