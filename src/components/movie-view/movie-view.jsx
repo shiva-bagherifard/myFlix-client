@@ -1,7 +1,13 @@
 import React from "react";
-import Button from "react-bootstrap/Button";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 
-export const MovieView = ({ movie, onBackClick }) => {
+export const MovieView = ({ movies }) => {
+  const { movieId } = useParams();
+
+  const movie = movies.find((m) => m.id === movieId);
+
+
   return (
     <div>
       <div>
@@ -27,9 +33,9 @@ export const MovieView = ({ movie, onBackClick }) => {
         <span>Featured: </span>
         <span>{movie.featured ? "True" : "False"}</span>
       </div>
-      <Button variant="primary" onClick={onBackClick}>
-        Back
-      </Button>
+      <Link to={`/`}>
+        <button className="back-button">Back</button>
+      </Link>
     </div>
   );
 };
