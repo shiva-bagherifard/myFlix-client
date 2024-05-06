@@ -1,10 +1,5 @@
-$primary: Turquoise;
-$body-bg: LightCyan;
+$color: steelblue;
 
-@import '~bootstrap/scss/bootstrap.scss';
-
-// $color: steelblue;
-
-// .my-flix {
-//   color: $color;
-// }
+.my-flix {
+    color: $color;
+  }
