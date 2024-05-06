@@ -7,6 +7,7 @@ import  Row from "react-bootstrap/Row";
 import Col from 'react-bootstrap/Col';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
+import { ProfileView } from "../profile-view/profile-view";
 
 
 export const MainView = () => {
@@ -22,7 +23,7 @@ export const MainView = () => {
     }
 
     fetch("https://testingmovieapi-l6tp.onrender.com/movies", {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => response.json())
       .then((data) => {
@@ -34,7 +35,7 @@ export const MainView = () => {
             description: movie.description,
             genre: movie.genre,
             director: movie.director.name,
-            featured: movie.featured
+            featured: movie.featured,
           };
         });
 
@@ -42,15 +43,17 @@ export const MainView = () => {
       });
   }, [token]);
 
-  return (
-    <BrowserRouter>
-    <NavigationBar  user={user}
+    return (
+      <BrowserRouter>
+        <NavigationBar
+          user={user}
         onLoggedOut={() => {
           setUser(null);
-          setToken(null)
-          localStorage.clear()
-        }}/>
-      <Row className="justify-content-md-center"> 
+          setToken(null);
+          localStorage.clear();
+        }}
+      />
+      <Row className="justify-content-md-center">
         <Routes>
           <Route
             path="/signup"
@@ -107,11 +110,32 @@ export const MainView = () => {
                 ) : (
                   <>
                     {movies.map((movie) => (
-                      <Col className="mb-4" key={movie.id} md={3}>
-                        <MovieCard movie={movie} />
+                      <Col className="mb-4" key={movie.id} md={3} sm={12}>
+                      <MovieCard 
+                      movie={movie} 
+                      isFavorite={user.favoriteMovies.includes(movie.title)}
+                      />
                       </Col>
                     ))}
                   </>
+                )}
+              </>
+            }
+          />
+        <Route
+            path="/profile"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <Col md={8}>
+                    <ProfileView
+                      localUser={user}
+                      movies={movies}
+                      token={token}
+                    />
+                  </Col>
                 )}
               </>
             }
