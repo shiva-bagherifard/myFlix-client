@@ -3,7 +3,7 @@ import Button  from 'react-bootstrap/Button'
 import  Form  from 'react-bootstrap/Form'
 import Row  from 'react-bootstrap/Row'
 
-export const UpdateUser = ({formData, handleUpdate, handleSubmit}) => {
+export const UpdateUser = ({formData, handleUpdate, handleSubmit, handleDeleteAccount}) => {
   return (
     <Row>
         <Form onSubmit={handleSubmit}>
@@ -49,6 +49,12 @@ export const UpdateUser = ({formData, handleUpdate, handleSubmit}) => {
                 />
             </Form.Group>
             <Button variant="primary" type="submit" >Submit Changes</Button>
+            <Button
+            onClick={() => handleDeleteAccount()}
+            variant="outline-secondary"
+            className="mx-3" >
+             Delete account
+            </Button>
 
         </Form>
     </Row>

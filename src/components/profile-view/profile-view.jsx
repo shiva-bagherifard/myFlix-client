@@ -24,7 +24,7 @@ export const ProfileView = ({localUser, movies, token}) => {
       };
       const handleSubmit = (event) => {
         event.preventDefault(event);
-        fetch(`https://mj-movies-flix-036de76605bb.herokuapp.com/users/${user.username}`, {
+        fetch(`https://testingmovieapi-l6tp.onrender.com/users/${user.username}`, {
             method: "PUT",
             body:JSON.stringify(formData),
             headers: {
@@ -69,8 +69,8 @@ export const ProfileView = ({localUser, movies, token}) => {
           }
       }
 
-      const handleDeleteAccount = (id) => {
-        fetch (`https://mj-movies-flix-036de76605bb.herokuapp.com/users/${id}`, {
+      const handleDeleteAccount = () => {
+        fetch (`https://testingmovieapi-l6tp.onrender.com/users/${storedUser.username}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -91,7 +91,7 @@ export const ProfileView = ({localUser, movies, token}) => {
           return;
         }
 
-        fetch("https://mj-movies-flix-036de76605bb.herokuapp.com/users", {
+        fetch("https://testingmovieapi-l6tp.onrender.com/users", {
           headers: { Authorization: `Bearer ${token}` }
         })
         .then((response) => response.json())
@@ -137,16 +137,11 @@ export const ProfileView = ({localUser, movies, token}) => {
            formData={formData}
            handleUpdate={handleUpdate}
            handleSubmit={handleSubmit}
+           handleDeleteAccount={handleDeleteAccount}
            />
            </Card.Body>
            </Card>      
     </Row>
-    <Button onClick={() => handleDeleteAccount(storedUser._id)} 
-        className="button-delete mb-5" 
-        type="submit" variant="outline-secondary"
-        >
-        Delete account
-        </Button>
     <Row>
         <Col className="mb-5" xs={12} md={12}>
             {

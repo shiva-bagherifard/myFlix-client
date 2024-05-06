@@ -18,7 +18,7 @@ export const MovieCard = ({ movie, isFavorite }) => {
   useEffect(() => {
     const addToFavorites = () => {
       fetch(
-        `https://mj-movies-flix-036de76605bb.herokuapp.com/users/${user.username}/movies/${encodeURIComponent(movie.title)}`,
+        `https://testingmovieapi-l6tp.onrender.com/users/${user.username}/movies/${encodeURIComponent(movie.title)}`,
         {
           method: "POST",
           headers: {
@@ -48,7 +48,7 @@ export const MovieCard = ({ movie, isFavorite }) => {
       };
       const removeFromFavorites = () => {
         fetch(
-          `https://mj-movies-flix-036de76605bb.herokuapp.com/users/${user.username}/movies/${encodeURIComponent(movie.title)}`,
+          `https://testingmovieapi-l6tp.onrender.com/users/${user.username}/movies/${encodeURIComponent(movie.title)}`,
           {
             method: "DELETE",
             headers: {
