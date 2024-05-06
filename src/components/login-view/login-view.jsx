@@ -58,6 +58,7 @@ export const LoginView = ({ onLoggedIn }) => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="mb-3"
             required
           />
         </Form.Group>
