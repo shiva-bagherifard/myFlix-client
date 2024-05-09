@@ -27,6 +27,7 @@ export const LoginView = ({ onLoggedIn }) => {
       const responseData = await response.json();
 
       if (response.ok) {
+        console.log(responseData)
         localStorage.setItem('user', JSON.stringify(responseData.user));
         localStorage.setItem('token', responseData.token);
         onLoggedIn(responseData.user, responseData.token); // Invoking onLoggedIn

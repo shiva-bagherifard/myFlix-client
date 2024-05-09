@@ -11,17 +11,8 @@ import { ProfileView } from "../profile-view/profile-view";
 
 export const MainView = () => {
     const [movies, setMovies] = useState([]);
-    const [user, setUser] = useState(() => {
-        try {
-            const storedUser = localStorage.getItem("user");
-            return storedUser ? JSON.parse(storedUser) : null;
-        } catch (error) {
-            console.error("Error parsing user from localStorage:", error);
-            return null;
-        }
-    });
+    const [user, setUser] = useState(()=>JSON.parse(localStorage.getItem("user")))
     const [token, setToken] = useState(() => localStorage.getItem("token"));
-
     useEffect(() => {
         if (token) {
             fetch("https://testingmovieapi-l6tp.onrender.com/movies", {
@@ -30,15 +21,14 @@ export const MainView = () => {
                 .then((response) => response.json())
                 .then((data) => {
                     const moviesFromApi = data.map((movie) => ({
-                        id: movie._id.$oid,
+                        id: movie._id,
                         title: movie.title,
                         image: movie.imageUrl,
                         description: movie.description,
                         genre: movie.genre,
-                        director: movie.director.name,
+                        director: movie.director,
                         featured: movie.featured,
                     }));
-
                     setMovies(moviesFromApi);
                 })
                 .catch(error => console.error('Error fetching movies:', error));
@@ -68,7 +58,7 @@ export const MainView = () => {
                     />
                     <Route
                         path="/login"
-                        element={<Col md={5}><LoginView onLoggedIn={handleLogin} /></Col>}
+                        element={user? <Navigate to="/" replace />: <Col md={5}><LoginView onLoggedIn={handleLogin} /></Col>}
                     />
                     <Route
                         path="/movies/:movieId"
