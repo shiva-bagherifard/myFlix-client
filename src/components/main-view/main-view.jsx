@@ -13,6 +13,8 @@ export const MainView = () => {
     const [movies, setMovies] = useState([]);
     const [user, setUser] = useState(()=>JSON.parse(localStorage.getItem("user")))
     const [token, setToken] = useState(() => localStorage.getItem("token"));
+    const [searchQuery, setSearchQuery] = useState("");
+
     useEffect(() => {
         if (token) {
             fetch("https://testingmovieapi-l6tp.onrender.com/movies", {
@@ -30,10 +32,29 @@ export const MainView = () => {
                         featured: movie.featured,
                     }));
                     setMovies(moviesFromApi);
+                    localStorage.setItem("movies", JSON.stringify(movies));
                 })
                 .catch(error => console.error('Error fetching movies:', error));
         }
     }, [token]);
+
+    const handleSearch =(e) => {
+
+        const query = e.target.value;
+        setSearchQuery(query);
+    
+        //Filter movies by title, genre or director
+        const filteredMovies = movies.filter((movie) => {
+          return (
+            movie.title.toLowerCase().includes(query.toLowerCase())
+            ||
+            movie.genre.toLowerCase().includes(query.toLowerCase())
+            ||
+            movie.director.toLowerCase().includes(query.toLowerCase())
+          );
+        })
+      setMovies(filteredMovies);
+    }
 
     const handleLogin = (loggedInUser, token) => {
         setUser(loggedInUser);
@@ -44,6 +65,8 @@ export const MainView = () => {
         <BrowserRouter>
             <NavigationBar
                 user={user}
+                query={searchQuery}
+                handleSearch={handleSearch}
                 onLoggedOut={() => {
                     setUser(null);
                     setToken(null);

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from "prop-types";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
@@ -74,4 +75,8 @@ export const LoginView = ({ onLoggedIn }) => {
       {error && <div className="alert alert-danger mt-3">{error}</div>}
     </div>
   );
+};
+
+LoginView.propTypes = {
+  onLoggedIn: PropTypes.func.isRequired,
 };

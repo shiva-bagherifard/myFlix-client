@@ -115,6 +115,7 @@ export const MovieCard = ({ movie, isFavorite }) => {
 };
 
 MovieCard.propTypes = {
+  isFavorite: PropTypes.bool.isRequired,
   movie: PropTypes.shape({
     id: PropTypes.string.isRequired, 
     title: PropTypes.string.isRequired,

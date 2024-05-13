@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 import { UpdateUser } from './update-user';
-import { UserInfo } from './user-info';
+import PropTypes from "prop-types"
+import { UserInfo } from './user-info'
 import { FavouriteMovies } from './favourite-movies';
 
 export const ProfileView = ({ localUser, movies, token }) => {
@@ -119,5 +120,11 @@ export const ProfileView = ({ localUser, movies, token }) => {
         </Col>
       </Row>
     </Container>
-  );
+  )
+}
+
+ProfileView.propTypes = {
+  localUser: PropTypes.object.isRequired,
+  movies: PropTypes.array.isRequired,
+  token: PropTypes.string.isRequired
 };
