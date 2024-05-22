@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 import { UpdateUser } from './update-user';
-import PropTypes from "prop-types"
-import { UserInfo } from './user-info'
+import PropTypes from "prop-types";
+import { UserInfo } from './user-info';
 import { FavouriteMovies } from './favourite-movies';
 
 export const ProfileView = ({ localUser, movies, token }) => {
@@ -32,19 +32,17 @@ export const ProfileView = ({ localUser, movies, token }) => {
     })
       .then((response) => {
         if (response.ok) {
-          alert('Update successful');
-          window.location.reload();
           return response.json();
         }
-        alert('Update failed');
+        throw new Error('Update failed');
       })
-      .then((user) => {
-        if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          setUser(user);
-        }
+      .then((updatedUser) => {
+        alert('Update successful');
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUser(updatedUser);
       })
       .catch((error) => {
+        alert(error.message);
         console.error(error);
       });
   };
@@ -81,7 +79,6 @@ export const ProfileView = ({ localUser, movies, token }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Users data: ', data);
         const currentUser = data.find((u) => u.username === localUser.username);
         setUser(currentUser);
         const favMovies = movies.filter((m) => currentUser.favoriteMovies.includes(m.title));
@@ -91,6 +88,11 @@ export const ProfileView = ({ localUser, movies, token }) => {
         console.error(error);
       });
   }, [token, localUser.username, movies]);
+
+  const handleFavoriteChange = (updatedFavorites) => {
+    const favMovies = movies.filter((m) => updatedFavorites.includes(m.title));
+    setFavoriteMovies(favMovies);
+  };
 
   return (
     <Container className="mx-1">
@@ -116,15 +118,15 @@ export const ProfileView = ({ localUser, movies, token }) => {
       </Row>
       <Row>
         <Col className="mb-5" xs={12} md={12}>
-          {favoriteMovies && <FavouriteMovies user={user} favoriteMovies={favoriteMovies} />}
+          {favoriteMovies && <FavouriteMovies user={user} favoriteMovies={favoriteMovies} onFavoriteChange={handleFavoriteChange} />}
         </Col>
       </Row>
     </Container>
-  )
-}
+  );
+};
 
 ProfileView.propTypes = {
   localUser: PropTypes.object.isRequired,
   movies: PropTypes.array.isRequired,
-  token: PropTypes.string.isRequired
+  token: PropTypes.string.isRequired,
 };

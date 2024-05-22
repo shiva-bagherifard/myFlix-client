@@ -11,7 +11,7 @@ import { ProfileView } from "../profile-view/profile-view";
 
 export const MainView = () => {
     const [movies, setMovies] = useState([]);
-    const [user, setUser] = useState(()=>JSON.parse(localStorage.getItem("user")))
+    const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
     const [token, setToken] = useState(() => localStorage.getItem("token"));
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -32,29 +32,25 @@ export const MainView = () => {
                         featured: movie.featured,
                     }));
                     setMovies(moviesFromApi);
-                    localStorage.setItem("movies", JSON.stringify(movies));
+                    localStorage.setItem("movies", JSON.stringify(moviesFromApi));
                 })
                 .catch(error => console.error('Error fetching movies:', error));
         }
     }, [token]);
 
-    const handleSearch =(e) => {
-
-        const query = e.target.value;
+    const handleSearch = (query) => {
         setSearchQuery(query);
-    
-        //Filter movies by title, genre or director
+
+        // Filter movies by title, genre, or director
         const filteredMovies = movies.filter((movie) => {
-          return (
-            movie.title.toLowerCase().includes(query.toLowerCase())
-            ||
-            movie.genre.toLowerCase().includes(query.toLowerCase())
-            ||
-            movie.director.toLowerCase().includes(query.toLowerCase())
-          );
-        })
-      setMovies(filteredMovies);
-    }
+            return (
+                movie.title.toLowerCase().includes(query.toLowerCase()) ||
+                movie.genre.toLowerCase().includes(query.toLowerCase()) ||
+                movie.director.toLowerCase().includes(query.toLowerCase())
+            );
+        });
+        setMovies(filteredMovies);
+    };
 
     const handleLogin = (loggedInUser, token) => {
         setUser(loggedInUser);
@@ -81,7 +77,7 @@ export const MainView = () => {
                     />
                     <Route
                         path="/login"
-                        element={user? <Navigate to="/" replace />: <Col md={5}><LoginView onLoggedIn={handleLogin} /></Col>}
+                        element={user ? <Navigate to="/" replace /> : <Col md={5}><LoginView onLoggedIn={handleLogin} /></Col>}
                     />
                     <Route
                         path="/movies/:movieId"
@@ -96,6 +92,17 @@ export const MainView = () => {
                                     <MovieCard
                                         movie={movie}
                                         isFavorite={user && user.favoriteMovies && user.favoriteMovies.includes(movie.title)}
+                                        onFavoriteChange={(updatedFavorites) => {
+                                            setUser((prevUser) => ({
+                                                ...prevUser,
+                                                favoriteMovies: updatedFavorites
+                                            }));
+                                            setMovies((prevMovies) =>
+                                                prevMovies.map((m) =>
+                                                    updatedFavorites.includes(m.title) ? { ...m, isFavorite: true } : { ...m, isFavorite: false }
+                                                )
+                                            );
+                                        }}
                                     />
                                 </Col>
                             ))}
