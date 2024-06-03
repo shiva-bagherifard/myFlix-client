@@ -48,7 +48,7 @@ export const UpdateUser = ({ formData, handleUpdate, handleSubmit, handleDeleteA
                     <Form.Control
                         type="date"
                         name="birthDate"  // Add name attribute
-                        value={formData.birthDate.slice(0, 10)}
+                        value={formData.birthDate ? formData.birthDate.slice(0, 10) : ''}
                         onChange={(e) => handleUpdate(e)}
                         required
                     />
@@ -65,6 +65,7 @@ export const UpdateUser = ({ formData, handleUpdate, handleSubmit, handleDeleteA
         </Row>
     );
 }
+
 UpdateUser.propTypes = {
     formData: PropTypes.object.isRequired,
     handleUpdate: PropTypes.func.isRequired,
