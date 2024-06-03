@@ -7,7 +7,12 @@ import { FavouriteMovies } from './favourite-movies';
 
 export const ProfileView = ({ localUser, movies, token }) => {
   const [user, setUser] = useState(localUser);
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = useState({
+    username: user.username,
+    email: user.email,
+    password: user.password,
+    birthDate: user.birthDate,
+  });
   const [favoriteMovies, setFavoriteMovies] = useState([]);
 
   const handleUpdate = (e) => {
@@ -37,8 +42,8 @@ export const ProfileView = ({ localUser, movies, token }) => {
         setUser(updatedUser);
       })
       .catch((error) => {
+        alert(error.message);
         console.error(error);
-        alert('Failed to update user profile');
       });
   };
 
@@ -61,7 +66,6 @@ export const ProfileView = ({ localUser, movies, token }) => {
       })
       .catch((error) => {
         console.error(error);
-        alert('Failed to delete user account');
       });
   };
 
@@ -79,22 +83,16 @@ export const ProfileView = ({ localUser, movies, token }) => {
         setUser(currentUser);
         const favMovies = movies.filter((m) => currentUser.favoriteMovies.includes(m.title));
         setFavoriteMovies(favMovies);
-        setFormData({
-          username: currentUser.username,
-          email: currentUser.email,
-          password: currentUser.password,
-          birthDate: currentUser.birthDate,
-        });
       })
       .catch((error) => {
         console.error(error);
-        alert('Failed to fetch user data');
       });
   }, [token, localUser.username, movies]);
 
-  if (!user) {
-    return <div>Loading...</div>; // or any other appropriate loading indicator
-  }
+  const handleFavoriteChange = (updatedFavorites) => {
+    const favMovies = movies.filter((m) => updatedFavorites.includes(m.title));
+    setFavoriteMovies(favMovies);
+  };
 
   return (
     <Container className="mx-1">
@@ -103,7 +101,7 @@ export const ProfileView = ({ localUser, movies, token }) => {
           <Card.Body>
             <Card.Title>My Profile</Card.Title>
             <Card.Text>
-              <UserInfo name={user.username} email={user.email} />
+            {user && <UserInfo name={user.username} email={user.email} />}
             </Card.Text>
           </Card.Body>
         </Card>
@@ -120,7 +118,7 @@ export const ProfileView = ({ localUser, movies, token }) => {
       </Row>
       <Row>
         <Col className="mb-5" xs={12} md={12}>
-          <FavouriteMovies user={user} favoriteMovies={favoriteMovies} />
+        {favoriteMovies && <FavouriteMovies user={user} favoriteMovies={favoriteMovies} onFavoriteChange={handleFavoriteChange} />}
         </Col>
       </Row>
     </Container>
@@ -130,4 +128,5 @@ export const ProfileView = ({ localUser, movies, token }) => {
 ProfileView.propTypes = {
   localUser: PropTypes.object.isRequired,
   movies: PropTypes.array.isRequired,
-  token: PropTypes
+  token: PropTypes.string.isRequired,
+};
