@@ -31,26 +31,31 @@ export const MovieView = ({ movies }) => {
         <span>{movie.genre}</span>
       </div>
       <div>
-        {/* Access director's name properly */}
+        {/* Check if director exists before accessing its properties */}
         <span>Director: </span>
-        <span>{movie.director.name}</span>
+        <span>{movie.director ? movie.director.name : "Unknown"}</span>
       </div>
       <div>
         <span>Featured: </span>
         <span>{movie.featured ? "True" : "False"}</span>
       </div>
       <Link to={`/`}>
-        <button className="back-button" >Back</button>
+        <button className="back-button">Back</button>
       </Link>
     </div>
   );
 };
 
 MovieView.propTypes = {
-  movies: PropTypes.shape({
-   title: PropTypes.string,
-   description: PropTypes.string,
-   genre: PropTypes.string,
-   director: PropTypes.string, 
- }).isRequired
- };
+  movies: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    genre: PropTypes.string.isRequired,
+    director: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    }),
+    featured: PropTypes.bool.isRequired,
+    imageUrl: PropTypes.string.isRequired,
+  })).isRequired
+};
