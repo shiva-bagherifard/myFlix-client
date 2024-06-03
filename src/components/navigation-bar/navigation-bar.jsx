@@ -1,9 +1,8 @@
 import React from 'react';
-import { Navbar, Container, Nav, Row, Col, Form } from "react-bootstrap";
+import { Navbar, Container, Nav, Form, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { SearchBar } from "../search-bar/search-bar";
-
 
 export const NavigationBar = ({ user, handleSearch, query, onLoggedOut }) => {
   return (
@@ -26,23 +25,13 @@ export const NavigationBar = ({ user, handleSearch, query, onLoggedOut }) => {
               </>
             )}
           </Nav>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Form inline="true">
-                  <Row>
-                    <Col xs="auto">
-                      <SearchBar
-                        handleSearch={handleSearch}
-                        query={query}
-                      />
-                    </Col>
-                  </Row>
-                </Form>
-              }
-            />
-          </Routes>
+          <Form inline>
+            <Row>
+              <Col xs="auto">
+                <SearchBar query={query} handleSearch={handleSearch} />
+              </Col>
+            </Row>
+          </Form>
         </Navbar.Collapse>
       </Container>
     </Navbar>
@@ -50,7 +39,7 @@ export const NavigationBar = ({ user, handleSearch, query, onLoggedOut }) => {
 };
 
 NavigationBar.propTypes = {
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
   query: PropTypes.string.isRequired,
   onLoggedOut: PropTypes.func.isRequired,
   handleSearch: PropTypes.func.isRequired

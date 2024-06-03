@@ -8,13 +8,14 @@ export const SearchBar = ({ query, handleSearch }) => {
       <Form.Control
         type="text"
         value={query}
-        onChange={(e) => handleSearch(e)}
+        onChange={(e) => handleSearch(e.target.value)}
         placeholder="Search"
         className="sm-2 mb-3"
       />
     </Row>
   );
 };
+
 SearchBar.propTypes = {
   handleSearch: PropTypes.func.isRequired,
   query: PropTypes.string.isRequired
