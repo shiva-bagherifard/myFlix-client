@@ -14,6 +14,7 @@ export const MainView = () => {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
     const [token, setToken] = useState(() => localStorage.getItem("token"));
     const [searchQuery, setSearchQuery] = useState("");
+    const [filteredMovies, setFilteredMovies] = useState([]);
 
     useEffect(() => {
         if (token) {
@@ -32,7 +33,7 @@ export const MainView = () => {
                         featured: movie.featured,
                     }));
                     setMovies(moviesFromApi);
-                    localStorage.setItem("movies", JSON.stringify(moviesFromApi));
+                    setFilteredMovies(moviesFromApi);
                 })
                 .catch(error => console.error('Error fetching movies:', error));
         }
@@ -40,21 +41,25 @@ export const MainView = () => {
 
     const handleSearch = (query) => {
         setSearchQuery(query);
-
-        // Filter movies by title, genre, or director
-        const filteredMovies = movies.filter((movie) => {
-            return (
-                movie.title.toLowerCase().includes(query.toLowerCase()) ||
-                movie.genre.toLowerCase().includes(query.toLowerCase()) ||
-                movie.director.toLowerCase().includes(query.toLowerCase())
-            );
-        });
-        setMovies(filteredMovies);
+        const filtered = movies.filter((movie) =>
+            movie.title.toLowerCase().includes(query.toLowerCase()) ||
+            movie.genre.toLowerCase().includes(query.toLowerCase()) ||
+            movie.director.toLowerCase().includes(query.toLowerCase())
+        );
+        setFilteredMovies(filtered);
     };
 
     const handleLogin = (loggedInUser, token) => {
         setUser(loggedInUser);
         setToken(token);
+        localStorage.setItem("user", JSON.stringify(loggedInUser));
+        localStorage.setItem("token", token);
+    };
+
+    const handleLogout = () => {
+        setUser(null);
+        setToken(null);
+        localStorage.clear();
     };
 
     return (
@@ -63,11 +68,9 @@ export const MainView = () => {
                 user={user}
                 query={searchQuery}
                 handleSearch={handleSearch}
-                onLoggedOut={() => {
-                    setUser(null);
-                    setToken(null);
-                    localStorage.clear();
-                }}
+                onLoggedOut={handleLogout}
+                movies={movies}
+                setFilteredMovies={setFilteredMovies}
             />
             <Row className="justify-content-md-center">
                 <Routes>
@@ -82,12 +85,13 @@ export const MainView = () => {
                     <Route
                         path="/movies/:movieId"
                         element={
-                            !user ? <Navigate to="/login" replace /> : movies.length === 0 ? <Col>The list is empty!</Col> : <Col md={8}><MovieView movies={movies} /></Col>}
+                            !user ? <Navigate to="/login" replace /> : filteredMovies.length === 0 ? <Col>The list is empty!</Col> : <Col md={8}><MovieView movies={filteredMovies} /></Col>
+                        }
                     />
                     <Route
                         path="/"
                         element={
-                            !user ? <Navigate to="/login" replace /> : movies.length === 0 ? <Col>The list is empty!</Col> : movies.map((movie) => (
+                            !user ? <Navigate to="/login" replace /> : filteredMovies.length === 0 ? <Col>The list is empty!</Col> : filteredMovies.map((movie) => (
                                 <Col className="mb-5" key={movie.id} md={3} sm={12}>
                                     <MovieCard
                                         movie={movie}
@@ -97,15 +101,11 @@ export const MainView = () => {
                                                 ...prevUser,
                                                 favoriteMovies: updatedFavorites
                                             }));
-                                            setMovies((prevMovies) =>
-                                                prevMovies.map((m) =>
-                                                    updatedFavorites.includes(m.title) ? { ...m, isFavorite: true } : { ...m, isFavorite: false }
-                                                )
-                                            );
                                         }}
                                     />
                                 </Col>
-                            ))}
+                            ))
+                        }
                     />
                     <Route
                         path="/profile"

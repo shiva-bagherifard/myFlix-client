@@ -4,23 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { SearchBar } from "../search-bar/search-bar";
 
-export const NavigationBar = ({ user, handleSearch, query, onLoggedOut, movies }) => {
-  
-  // Function to filter movies based on the query
-  const filterMovies = (query) => {
-    return movies.filter(movie =>
-      movie.title.toLowerCase().startsWith(query.toLowerCase())
-    );
-  };
-
-  // Handling search with filtering based on query
-  const handleSearchWithFilter = (newQuery) => {
-    handleSearch(newQuery);
-    // Filter movies based on the new query
-    const filteredMovies = filterMovies(newQuery);
-    // You can do something with filteredMovies if needed
-  };
-
+export const NavigationBar = ({ user, handleSearch, query, onLoggedOut }) => {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -45,7 +29,7 @@ export const NavigationBar = ({ user, handleSearch, query, onLoggedOut, movies }
             <Form inline>
               <Row>
                 <Col xs="auto">
-                  <SearchBar query={query} handleSearch={handleSearchWithFilter} />
+                  <SearchBar query={query} handleSearch={handleSearch} />
                 </Col>
               </Row>
             </Form>
@@ -61,5 +45,4 @@ NavigationBar.propTypes = {
   query: PropTypes.string.isRequired,
   onLoggedOut: PropTypes.func.isRequired,
   handleSearch: PropTypes.func.isRequired,
-  movies: PropTypes.array.isRequired
 };
