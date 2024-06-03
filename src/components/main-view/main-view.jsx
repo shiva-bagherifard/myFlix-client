@@ -69,8 +69,6 @@ export const MainView = () => {
                 query={searchQuery}
                 handleSearch={handleSearch}
                 onLoggedOut={handleLogout}
-                movies={movies}
-                setFilteredMovies={setFilteredMovies}
             />
             <Row className="justify-content-md-center">
                 <Routes>

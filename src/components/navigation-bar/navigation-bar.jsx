@@ -26,7 +26,7 @@ export const NavigationBar = ({ user, handleSearch, query, onLoggedOut }) => {
             )}
           </Nav>
           {user && (
-            <Form inline>
+            <Form className="d-flex">
               <Row>
                 <Col xs="auto">
                   <SearchBar query={query} handleSearch={handleSearch} />
