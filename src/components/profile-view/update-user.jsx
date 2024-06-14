@@ -13,7 +13,7 @@ export const UpdateUser = ({ formData, handleUpdate, handleSubmit, handleDeleteA
                     <Form.Label>Username:</Form.Label>
                     <Form.Control
                         type="text"
-                        name="username"
+                        name="username"  // Add name attribute
                         minLength={4}
                         value={formData.username}
                         onChange={(e) => handleUpdate(e)}
@@ -26,7 +26,7 @@ export const UpdateUser = ({ formData, handleUpdate, handleSubmit, handleDeleteA
                     </Form.Label>
                     <Form.Control
                         type="password"
-                        name="password"
+                        name="password"  // Add name attribute
                         minLength={8}
                         value={formData.password}
                         onChange={(e) => handleUpdate(e)}
@@ -37,7 +37,7 @@ export const UpdateUser = ({ formData, handleUpdate, handleSubmit, handleDeleteA
                     <Form.Label>Email:</Form.Label>
                     <Form.Control
                         type="email"
-                        name="email"
+                        name="email"  // Add name attribute
                         value={formData.email}
                         onChange={(e) => handleUpdate(e)}
                         required
@@ -47,7 +47,7 @@ export const UpdateUser = ({ formData, handleUpdate, handleSubmit, handleDeleteA
                     <Form.Label>Birthdate:</Form.Label>
                     <Form.Control
                         type="date"
-                        name="birthDate"
+                        name="birthDate"  // Add name attribute
                         value={formData.birthDate ? formData.birthDate.slice(0, 10) : ''}
                         onChange={(e) => handleUpdate(e)}
                         required
@@ -55,11 +55,7 @@ export const UpdateUser = ({ formData, handleUpdate, handleSubmit, handleDeleteA
                 </Form.Group>
                 <Button variant="primary" type="submit">Submit Changes</Button>
                 <Button
-                    onClick={() => {
-                        if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-                            handleDeleteAccount();
-                        }
-                    }}
+                    onClick={() => handleDeleteAccount()}
                     variant="outline-secondary"
                     className="mx-3"
                 >
@@ -76,5 +72,3 @@ UpdateUser.propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     handleDeleteAccount: PropTypes.func.isRequired
 };
-
-export default UpdateUser;
