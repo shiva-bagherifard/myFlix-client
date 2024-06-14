@@ -17,3 +17,6 @@
     npm install react-router react-router-dom --save
 9.  Install parcel as a local developer dependency
     npm install --save-dev parcel@2.12.0
+
+    Author:
+    Shiva Bagherifard
