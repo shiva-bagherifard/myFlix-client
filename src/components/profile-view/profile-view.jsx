@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { UpdateUser } from './update-user';
 import PropTypes from "prop-types";
 import { UserInfo } from './user-info';
@@ -14,6 +15,7 @@ export const ProfileView = ({ localUser, movies, token }) => {
     birthDate: user.birthDate,
   });
   const [favoriteMovies, setFavoriteMovies] = useState([]);
+  const navigate = useNavigate();
 
   const handleUpdate = (e) => {
     const { name, value } = e.target;
@@ -89,9 +91,32 @@ export const ProfileView = ({ localUser, movies, token }) => {
       });
   }, [token, localUser.username, movies]);
 
-  const handleFavoriteChange = (updatedFavorites) => {
-    const favMovies = movies.filter((m) => updatedFavorites.includes(m.title));
-    setFavoriteMovies(favMovies);
+  const removeFavorite = (movieTitle) => {
+    fetch(`https://testingmovieapi-l6tp.onrender.com/users/${user.username}/movies/${encodeURIComponent(movieTitle)}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to remove movie from favorites.');
+      }
+      return response.json();
+    })
+    .then((updatedUser) => {
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+      // Update favorite movies list after removal
+      const updatedFavoriteMovies = movies.filter((m) => updatedUser.favoriteMovies.includes(m.title));
+      setFavoriteMovies(updatedFavoriteMovies);
+      navigate('/profile');
+    })
+    .catch((error) => {
+      console.error(error);
+      alert('Failed to remove favorite.');
+    });
   };
 
   return (
@@ -101,7 +126,7 @@ export const ProfileView = ({ localUser, movies, token }) => {
           <Card.Body>
             <Card.Title>My Profile</Card.Title>
             <Card.Text>
-            {user && <UserInfo name={user.username} email={user.email} />}
+              {user && <UserInfo name={user.username} email={user.email} />}
             </Card.Text>
           </Card.Body>
         </Card>
@@ -118,7 +143,13 @@ export const ProfileView = ({ localUser, movies, token }) => {
       </Row>
       <Row>
         <Col className="mb-5" xs={12} md={12}>
-        {favoriteMovies && <FavouriteMovies user={user} favoriteMovies={favoriteMovies} onFavoriteChange={handleFavoriteChange} />}
+          {favoriteMovies && (
+            <FavouriteMovies
+              user={user}
+              favoriteMovies={favoriteMovies}
+              onFavoriteChange={removeFavorite} // Pass removeFavorite function
+            />
+          )}
         </Col>
       </Row>
     </Container>
