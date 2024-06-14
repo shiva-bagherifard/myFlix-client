@@ -1,60 +1,39 @@
-import { Navbar, Container, Nav, Row, Col, Form } from "react-bootstrap";
+import React from 'react';
+import { Navbar, Container, Nav, Form, Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { Link, Route, Routes } from "react-router-dom";
-
-import "./navigation-bar.scss";
+import { Link } from "react-router-dom";
 import { SearchBar } from "../search-bar/search-bar";
 
-
-export const NavigationBar = ({ user, movies, handleSearch, query, onLoggedOut }) => {
+export const NavigationBar = ({ user, handleSearch, query, onLoggedOut }) => {
   return (
-    <Navbar bg="Turquoise" expand="lg">
+    <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand as={Link} to="/">
-        MyFlix
-        </Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">MyFlix</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            {!user && (
+            {user ? (
               <>
-                <Nav.Link as={Link} to="/login">
-                  Login
-                </Nav.Link>
-                <Nav.Link as={Link} to="/signup">
-                  Signup
-                </Nav.Link>
+                <Nav.Link as={Link} to="/">Movies</Nav.Link>
+                <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+                <Nav.Link onClick={onLoggedOut}>Logout</Nav.Link>
               </>
-            )}
-            {user && (
+            ) : (
               <>
-                <Nav.Link as={Link} to="/">
-                  Movies
-                </Nav.Link>
-                <Nav.Link as={Link} to="/profile">
-                  Profile
-                </Nav.Link>
-                <Nav.Link onClick={onLoggedOut} >Logout</Nav.Link>
+                <Nav.Link as={Link} to="/login">Login</Nav.Link>
+                <Nav.Link as={Link} to="/signup">Signup</Nav.Link>
               </>
             )}
           </Nav>
-          <Routes>
-            <Route
-            path="/"
-            element={
-              <Form inline="true">
-                  <Row>
-                    <Col xs="auto">
-                    <SearchBar
-                     handleSearch={handleSearch}
-                     query={query}
-                     movies={movies} />
-                    </Col>
-                  </Row>
-              </Form>
-            }
-          />
-          </Routes>
+          {user && (
+            <Form className="d-flex">
+              <Row>
+                <Col xs="auto">
+                  <SearchBar query={query} handleSearch={handleSearch} />
+                </Col>
+              </Row>
+            </Form>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
@@ -62,7 +41,8 @@ export const NavigationBar = ({ user, movies, handleSearch, query, onLoggedOut }
 };
 
 NavigationBar.propTypes = {
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
   query: PropTypes.string.isRequired,
-  onLoggedOut: PropTypes.func.isRequired
+  onLoggedOut: PropTypes.func.isRequired,
+  handleSearch: PropTypes.func.isRequired,
 };

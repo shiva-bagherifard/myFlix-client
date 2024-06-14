@@ -3,56 +3,62 @@ import PropTypes from "prop-types";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-export const LoginView = ({onLoggedIn}) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword]= useState("");
-  const handleSubmit = (event) => {
+export const LoginView = ({ onLoggedIn }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const data = {
       username: username,
-      password: password
+      password: password,
     };
 
-
-   fetch('https://testingmovieapi-l6tp.onrender.com/login', {
-        method: "POST",
+    try {
+      const response = await fetch('https://testingmovieapi-l6tp.onrender.com/login', {
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
-    }).then((response) => response.json())
-    .then((data) => {
-      console.log("Login response: ", data);
-      if (data.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("token", data.token);
-        onLoggedIn(data.user, data.token);
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        console.log(responseData)
+        localStorage.setItem('user', JSON.stringify(responseData.user));
+        localStorage.setItem('token', responseData.token);
+        onLoggedIn(responseData.user, responseData.token); // Invoking onLoggedIn
+        alert('Login successful');
       } else {
-        alert("No such user");
+        throw new Error(responseData.error || 'Unknown error');
       }
-    })
-    .catch((e) => {
-        console.error("Login error: ", e);
-      alert("Something went wrong");
-    });
-}
+    } catch (error) {
+      console.error('Error during login:', error);
+      setError('Login failed. Please check your credentials.');
+      alert('Login failed. Please check your credentials.');
+    }
+  };
 
-return (
-  <Form onSubmit={handleSubmit}>
-    <Form.Group controlId="formUsername">
-      <Form.Label>Username:</Form.Label>
-      <Form.Control
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        required
-        minLength="3" 
-        className="mb-4"
-      />
-    </Form.Group>
+  return (
+    <div>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formUsername">
+          <Form.Label>Username:</Form.Label>
+          <Form.Control
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            minLength="3"
+            className="mb-4"
+          />
+        </Form.Group>
 
-    <Form.Group controlId="formPassword">
+        <Form.Group controlId="formPassword">
           <Form.Label>Password:</Form.Label>
           <Form.Control
             type="password"
@@ -66,9 +72,11 @@ return (
           Submit
         </Button>
       </Form>
-    );
-  };
+      {error && <div className="alert alert-danger mt-3">{error}</div>}
+    </div>
+  );
+};
 
-  LoginView.propTypes = {
-    onLoggedIn: PropTypes.func.isRequired,
-  };
+LoginView.propTypes = {
+  onLoggedIn: PropTypes.func.isRequired,
+};
