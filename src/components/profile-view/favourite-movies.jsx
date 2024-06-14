@@ -11,27 +11,35 @@ export const FavouriteMovies = ({ user, favoriteMovies, onFavoriteChange }) => {
       <Col md={12}>
         <h3>My Movies</h3>
       </Col>
-      <Row>
-        {favoriteMovies.map((movie) => {
-          return (
-            <Col className="mb-5" key={movie._id} md={4}>
-              <Link to={`/movies/${movie.title}`}>
-                <MovieCard
-                  movie={movie}
-                  isFavorite={user.favoriteMovies.includes(movie.title)}
-                  onFavoriteChange={onFavoriteChange} // Pass the callback
-                />
-              </Link>
-            </Col>
-          );
-        })}
-      </Row>
+      {favoriteMovies.length > 0 ? (
+        <Row>
+          {favoriteMovies.map((movie) => {
+            return (
+              <Col className="mb-5" key={movie._id} md={4}>
+                <Link to={`/movies/${movie.title}`}>
+                  <MovieCard
+                    movie={movie}
+                    isFavorite={user.favoriteMovies.includes(movie.title)}
+                    onFavoriteChange={onFavoriteChange} // Pass the callback
+                  />
+                </Link>
+              </Col>
+            );
+          })}
+        </Row>
+      ) : (
+        <Col md={12}>
+          <p>No favorite movies yet.</p>
+        </Col>
+      )}
     </Row>  
-  )
+  );
 }
 
 FavouriteMovies.propTypes = {
   favoriteMovies: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
-  onFavoriteChange: PropTypes.func.isRequired // Add the new prop type
+  onFavoriteChange: PropTypes.func.isRequired
 };
+
+export default FavouriteMovies;
