@@ -61,7 +61,7 @@ export const ProfileView = ({ localUser, movies, token }) => {
         if (response.ok) {
           alert('Account deleted successfully.');
           localStorage.clear();
-          window.location.reload();
+          navigate('/');
         } else {
           alert('Something went wrong.');
         }
@@ -69,6 +69,58 @@ export const ProfileView = ({ localUser, movies, token }) => {
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  const addFavorite = (movieTitle) => {
+    fetch(`https://testingmovieapi-l6tp.onrender.com/users/${user.username}/movies/${encodeURIComponent(movieTitle)}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to add movie to favorites.');
+      }
+      return response.json();
+    })
+    .then((updatedUser) => {
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+      navigate('/profile');
+    })
+    .catch((error) => {
+      console.error(error);
+      alert('Failed to add favorite.');
+    });
+  };
+
+  const removeFavorite = (movieTitle) => {
+    fetch(`https://testingmovieapi-l6tp.onrender.com/users/${user.username}/movies/${encodeURIComponent(movieTitle)}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to remove movie from favorites.');
+      }
+      return response.json();
+    })
+    .then((updatedUser) => {
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+      const updatedFavoriteMovies = movies.filter((m) => updatedUser.favoriteMovies.includes(m.title));
+      setFavoriteMovies(updatedFavoriteMovies);
+      navigate('/profile');
+    })
+    .catch((error) => {
+      console.error(error);
+      alert('Failed to remove favorite.');
+    });
   };
 
   useEffect(() => {
@@ -90,34 +142,6 @@ export const ProfileView = ({ localUser, movies, token }) => {
         console.error(error);
       });
   }, [token, localUser.username, movies]);
-
-  const removeFavorite = (movieTitle) => {
-    fetch(`https://testingmovieapi-l6tp.onrender.com/users/${user.username}/movies/${encodeURIComponent(movieTitle)}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Failed to remove movie from favorites.');
-      }
-      return response.json();
-    })
-    .then((updatedUser) => {
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      setUser(updatedUser);
-      // Update favorite movies list after removal
-      const updatedFavoriteMovies = movies.filter((m) => updatedUser.favoriteMovies.includes(m.title));
-      setFavoriteMovies(updatedFavoriteMovies);
-      navigate('/profile');
-    })
-    .catch((error) => {
-      console.error(error);
-      alert('Failed to remove favorite.');
-    });
-  };
 
   return (
     <Container className="mx-1">
@@ -147,7 +171,7 @@ export const ProfileView = ({ localUser, movies, token }) => {
             <FavouriteMovies
               user={user}
               favoriteMovies={favoriteMovies}
-              onFavoriteChange={removeFavorite} // Pass removeFavorite function
+              onFavoriteChange={removeFavorite}
             />
           )}
         </Col>
