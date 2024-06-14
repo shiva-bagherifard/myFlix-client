@@ -8,12 +8,48 @@ import { FavouriteMovies } from './favourite-movies';
 export const ProfileView = ({ localUser, movies, token }) => {
   const [user, setUser] = useState(localUser);
   const [formData, setFormData] = useState({
-    username: user.username,
-    email: user.email,
-    password: user.password,
-    birthDate: user.birthDate,
+    username: '',
+    email: '',
+    password: '',
+    birthDate: '',
   });
   const [favoriteMovies, setFavoriteMovies] = useState([]);
+
+  useEffect(() => {
+    if (localUser) {
+      setUser(localUser);
+      setFormData({
+        username: localUser.username,
+        email: localUser.email,
+        password: localUser.password,
+        birthDate: localUser.birthDate,
+      });
+    }
+  }, [localUser]);
+
+  useEffect(() => {
+    if (!token || !user.username) {
+      return;
+    }
+
+    fetch(`https://testingmovieapi-l6tp.onrender.com/users/${user.username}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Failed to fetch user data');
+      })
+      .then((userData) => {
+        setUser(userData);
+        const favMovies = movies.filter((m) => userData.favoriteMovies.includes(m.title));
+        setFavoriteMovies(favMovies);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [token, user.username, movies]);
 
   const handleUpdate = (e) => {
     const { name, value } = e.target;
@@ -48,52 +84,33 @@ export const ProfileView = ({ localUser, movies, token }) => {
   };
 
   const handleDeleteAccount = () => {
-    fetch(`https://testingmovieapi-l6tp.onrender.com/users/${user.username}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert('Account deleted successfully.');
-          localStorage.clear();
-          window.location.reload();
-        } else {
-          alert('Something went wrong.');
-        }
+    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      fetch(`https://testingmovieapi-l6tp.onrender.com/users/${user.username}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  useEffect(() => {
-    if (!token) {
-      return;
+        .then((response) => {
+          if (response.ok) {
+            alert('Account deleted successfully.');
+            localStorage.clear();
+            window.location.reload();
+          } else {
+            alert('Something went wrong.');
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
-
-    fetch('https://testingmovieapi-l6tp.onrender.com/users', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const currentUser = data.find((u) => u.username === localUser.username);
-        setUser(currentUser);
-        const favMovies = movies.filter((m) => currentUser.favoriteMovies.includes(m.title));
-        setFavoriteMovies(favMovies);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [token, localUser.username, movies]);
+  };
 
   const handleFavoriteChange = (updatedFavorites) => {
     const updatedFavMovies = movies.filter((m) => updatedFavorites.includes(m.title));
     setFavoriteMovies(updatedFavMovies);
 
-    // Update user's favoriteMovies array in the backend (optional if needed)
     fetch(`https://testingmovieapi-l6tp.onrender.com/users/${user.username}`, {
       method: 'PUT',
       body: JSON.stringify({ ...user, favoriteMovies: updatedFavorites }),

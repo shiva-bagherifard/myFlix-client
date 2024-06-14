@@ -6,6 +6,11 @@ import { MovieCard } from '../movie-card/movie-card';
 import { Link } from 'react-router-dom';
 
 export const FavouriteMovies = ({ user, favoriteMovies, onFavoriteChange }) => {
+  const handleFavoriteChange = (updatedFavorites) => {
+    // Update local state with updatedFavorites
+    onFavoriteChange(updatedFavorites);
+  };
+
   return (
     <Row>
       <Col md={12}>
@@ -13,23 +18,21 @@ export const FavouriteMovies = ({ user, favoriteMovies, onFavoriteChange }) => {
       </Col>
       {favoriteMovies.length > 0 ? (
         <Row>
-          {favoriteMovies.map((movie) => {
-            return (
-              <Col className="mb-5" key={movie._id} md={4}>
-                <Link to={`/movies/${movie.title}`}>
-                  <MovieCard
-                    movie={movie}
-                    isFavorite={user.favoriteMovies.includes(movie.title)}
-                    onFavoriteChange={onFavoriteChange} // Pass the callback
-                  />
-                </Link>
-              </Col>
-            );
-          })}
+          {favoriteMovies.map((movie) => (
+            <Col className="mb-5" key={movie._id} md={4}>
+              <Link to={`/movies/${movie.title}`}>
+                <MovieCard
+                  movie={movie}
+                  isFavorite={user.favoriteMovies.includes(movie.title)}
+                  onFavoriteChange={handleFavoriteChange}
+                />
+              </Link>
+            </Col>
+          ))}
         </Row>
       ) : (
         <Col md={12}>
-          <p>No favorite movies yet.</p>
+          <p>No favorite movies found.</p>
         </Col>
       )}
     </Row>  
