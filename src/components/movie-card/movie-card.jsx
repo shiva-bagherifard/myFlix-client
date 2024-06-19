@@ -2,14 +2,14 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import React from "react";
 import { Button, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "./movie-card.scss";
 
 export const MovieCard = ({ movie, isFavorite, onFavoriteChange }) => {
   const storedToken = localStorage.getItem("token");
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const [user, setUser] = useState(storedUser ? storedUser : null);
-  const [token, setToken] = useState(storedToken ? storedToken : null);
+  const [token, setToken] = useState(storedToken ? storedToken : null); 
 
   const addToFavorites = () => {
     fetch(
@@ -38,7 +38,8 @@ export const MovieCard = ({ movie, isFavorite, onFavoriteChange }) => {
       });
   };
 
-  const removeFromFavorites = () => {
+  const removeFromFavorites = (e) => {
+    // e.preventDefault();
     fetch(
       `https://testingmovieapi-l6tp.onrender.com/users/${user.username}/movies/${encodeURIComponent(movie.title)}`,
       {
@@ -59,6 +60,7 @@ export const MovieCard = ({ movie, isFavorite, onFavoriteChange }) => {
         localStorage.setItem("user", JSON.stringify(updatedUser));
         setUser(updatedUser);
         onFavoriteChange(updatedUser.favoriteMovies); // Update the parent component's state
+         // Refresh the page to reflect the change
       })
       .catch((error) => {
         console.error(error);
@@ -67,15 +69,16 @@ export const MovieCard = ({ movie, isFavorite, onFavoriteChange }) => {
 
   return (
     <>
-      <Link to={`/movies/${encodeURIComponent(movie.id)}`} className="movie-view">
-        <Card className="h-100">
-          <Card.Img variant="top" src={movie.image} className="object-fit-cover" />
+      
+      <Card className="h-100">
+        <Link to={`/movies/${encodeURIComponent(movie.id)}`} className="movie-view">
+          <Card.Img variant="top" src={movie.image} className="object-fit-cover" />  
+        </Link>
           <Card.Body>
             <Card.Title>{movie.title}</Card.Title>
             <Card.Text>{movie.genre}</Card.Text>
           </Card.Body>
         </Card>
-      </Link>
       <Card>
         {isFavorite ? (
           <Button variant="primary" onClick={removeFromFavorites}>

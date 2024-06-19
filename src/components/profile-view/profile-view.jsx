@@ -38,8 +38,10 @@ export const ProfileView = ({ localUser, movies, token }) => {
       })
       .then((updatedUser) => {
         alert('Update successful');
-        localStorage.setItem('user', JSON.stringify(updatedUser));
+        localStorage.clear();
+
         setUser(updatedUser);
+        window.location.reload();
       })
       .catch((error) => {
         alert(error.message);
@@ -100,9 +102,9 @@ export const ProfileView = ({ localUser, movies, token }) => {
         <Card className="mb-5">
           <Card.Body>
             <Card.Title>My Profile</Card.Title>
-            <Card.Text>
+            <div>
             {user && <UserInfo name={user.username} email={user.email} />}
-            </Card.Text>
+            </div>
           </Card.Body>
         </Card>
         <Card className="mb-5">
