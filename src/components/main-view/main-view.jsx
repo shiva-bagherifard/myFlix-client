@@ -42,9 +42,7 @@ export const MainView = () => {
     const handleSearch = (query) => {
         setSearchQuery(query);
         const filtered = movies.filter((movie) =>
-            movie.title.toLowerCase().includes(query.toLowerCase()) ||
-            movie.genre.toLowerCase().includes(query.toLowerCase()) ||
-            movie.director.toLowerCase().includes(query.toLowerCase())
+            movie.title.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredMovies(filtered);
     };

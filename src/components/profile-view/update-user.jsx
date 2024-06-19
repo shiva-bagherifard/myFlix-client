@@ -17,7 +17,6 @@ export const UpdateUser = ({ formData, handleUpdate, handleSubmit, handleDeleteA
                         minLength={4}
                         value={formData.username}
                         onChange={(e) => handleUpdate(e)}
-                        required
                     />
                 </Form.Group>
                 <Form.Group className='mb-2'>
@@ -40,7 +39,6 @@ export const UpdateUser = ({ formData, handleUpdate, handleSubmit, handleDeleteA
                         name="email"  // Add name attribute
                         value={formData.email}
                         onChange={(e) => handleUpdate(e)}
-                        required
                     />
                 </Form.Group>
                 <Form.Group className='mb-4'>
@@ -50,7 +48,6 @@ export const UpdateUser = ({ formData, handleUpdate, handleSubmit, handleDeleteA
                         name="birthDate"  // Add name attribute
                         value={formData.birthDate ? formData.birthDate.slice(0, 10) : ''}
                         onChange={(e) => handleUpdate(e)}
-                        required
                     />
                 </Form.Group>
                 <Button variant="primary" type="submit">Submit Changes</Button>

@@ -12,16 +12,14 @@ export const FavouriteMovies = ({ user, favoriteMovies, onFavoriteChange }) => {
         <h3>My Movies</h3>
       </Col>
       <Row>
-        {favoriteMovies.map((movie) => {
+        {favoriteMovies.map((movie,  index) => {
           return (
-            <Col className="mb-5" key={movie._id} md={4}>
-              <Link to={`/movies/${movie.title}`}>
-                <MovieCard
+            <Col className="mb-5" key={index} md={4}>
+              <MovieCard
                   movie={movie}
                   isFavorite={user.favoriteMovies.includes(movie.title)}
                   onFavoriteChange={onFavoriteChange} // Pass the callback
                 />
-              </Link>
             </Col>
           );
         })}
